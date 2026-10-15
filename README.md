@@ -1,5 +1,5 @@
 # Block Topple — playable ad
 
-Chơi thử: https://bagelcode-nmg.github.io/block-topple-playable/
+Chơi thử: https://bagelcode-nmg.github.io/block-topple-playable/ (bản mới nhất; mỗi bản cũ một thư mục pl<phiên bản>-<ngày>).
 
-Mỗi thư mục là một bản (pl<phiên bản>-<ngày>): 3 kịch bản (băng đếm số · chìa mở xích · cọ đổi màu), mỗi kịch bản có bản thường và bản autostore.
+Từ pl0.5: 2 bản — lật khối tô màu (paint) và lật khối phá kính (glass), mỗi bản có bản thường và bản autostore.
