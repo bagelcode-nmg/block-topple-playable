@@ -38,7 +38,16 @@
      viewport — its REAL size in CSS px, never transform: scale (playbook 1.12 §4.3) — with the controls above it. */
   html.playing, html.playing body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   #play { position: fixed; inset: 0; background: #0b1328; }
-  #stage iframe { display: block; border: 0; background: #3f86d6; }
+  /* behind the (transparent) playable: the backdrop of the game's own loading screen (css/loading.css #loading — gradient of the
+     theme hoang-gia + slow light rays), so while the file loads there is no plain blue; the playable's loading screen then paints
+     over it in the same place (người dùng 15/10/2026: "vẫn bị màn hình xanh") */
+  #stage .scr { position: relative; overflow: hidden; background: radial-gradient(ellipse 120% 90% at 50% 35%, #62aef2, #2b66bd); }
+  #stage .scr::before { content: ''; position: absolute; left: 50%; top: 24%; width: 180vmax; height: 180vmax; margin: -90vmax 0 0 -90vmax;
+    background: repeating-conic-gradient(rgba(255, 255, 255, .07) 0 9deg, transparent 9deg 22.5deg);
+    -webkit-mask-image: radial-gradient(closest-side, #000 15%, transparent 70%); mask-image: radial-gradient(closest-side, #000 15%, transparent 70%);
+    animation: scr-spin 30s linear infinite; }
+  @keyframes scr-spin { to { transform: rotate(360deg); } }
+  #stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border: 0; background: transparent; }
   #bar { position: absolute; left: 0; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 14px;
     background: #0f1a33; box-shadow: 0 1px 0 var(--line); }
   #bar .name { margin-right: auto; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -51,11 +60,11 @@
   #cBack { left: calc(10px + env(safe-area-inset-left, 0px)); }
   #cAgain { right: calc(10px + env(safe-area-inset-right, 0px)); }
   html.full #bar, html.frame .corner { display: none; }
-  html.full #play { background: #3f86d6; }
-  html.full #stage, html.full #stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+  html.full #play { background: #2b66bd; }
+  html.full #stage, html.full #stage .scr { position: absolute; inset: 0; width: 100%; height: 100%; }
   html.frame #stage { position: absolute; left: 0; right: 0; top: 56px; bottom: 0; display: flex; justify-content: center;
     align-items: center; }
-  html.frame #stage iframe { border-radius: 24px; box-shadow: 0 0 0 10px #050b1c, 0 0 0 12px var(--line), 0 18px 40px rgba(0, 0, 0, .5); }
+  html.frame #stage .scr { border-radius: 24px; box-shadow: 0 0 0 10px #050b1c, 0 0 0 12px var(--line), 0 18px 40px rgba(0, 0, 0, .5); }
   #fileline { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; color: var(--dim); font-size: 12px; }
   html.full #fileline { display: none; }
 </style>
@@ -91,8 +100,8 @@
     paint: { name: 'PLY 1 · Lật khối tô màu', icon: 'featBrush', short: 'Lăn khối tô kín sàn, rồi tô kín sàn 6×6 trước khi hết giờ.', what: 'Hook 1 — màn 1 của game: sàn chữ L 6×4, 9 ô, khối ngắn, tay chỉ 2 nước, không đồng hồ. → Hook 2 — màn 11: sàn 6×6, khối dài, đồng hồ 17 giây; đo 7 kiểu người chơi: 93–100% hết giờ khi còn 1–3 ô, thắng 0–6%.' },
     glass: { name: 'PLY 2 · Lật khối phá kính', icon: 'featBang', short: 'Lăn khối phá hết kính, rồi phá hết kính sàn 5×6 trước khi hết giờ.', what: 'Hook 1 — màn 1 của game: sàn chữ L 6×4, 9 ô kính, khối ngắn, tay chỉ 2 nước, không đồng hồ. → Hook 2 — màn 8: sàn 5×6, khối dài, đồng hồ 17 giây; đo 7 kiểu người chơi: 89–100% hết giờ khi còn 1–3 ô, thắng 0–3%.' }
   };
-  var BASE = "pl0.5-20261015/";   // where the playable files are (tools/goi-playable.js sets it for the shared copies)
-  var LIST = [{"kind":"paint","autostore":false,"pl":"0.5","day":"20261015","file":"BlockTopple-playable-paint-pl0.5-20261015.html","kb":1436,"md5":"1a0ecfaad2b76d2ee9cba1b674565389"},{"kind":"paint","autostore":true,"pl":"0.5","day":"20261015","file":"BlockTopple-playable-paint-autostore-pl0.5-20261015.html","kb":1436,"md5":"69229b3253752827c73b83f672a167cc"},{"kind":"glass","autostore":false,"pl":"0.5","day":"20261015","file":"BlockTopple-playable-glass-pl0.5-20261015.html","kb":1436,"md5":"9da5a15c69290054ffecb74cca67193f"},{"kind":"glass","autostore":true,"pl":"0.5","day":"20261015","file":"BlockTopple-playable-glass-autostore-pl0.5-20261015.html","kb":1436,"md5":"b565001d6e434b64b9773c5937fbe6bc"}];      // null = read BASE + manifest.json (this build's files); tools/goi-playable.js writes the list in
+  var BASE = "pl0.6-20261015/";   // where the playable files are (tools/goi-playable.js sets it for the shared copies)
+  var LIST = [{"kind":"paint","autostore":false,"pl":"0.6","day":"20261015","file":"BlockTopple-playable-paint-pl0.6-20261015.html","kb":1449,"md5":"a10d76f062d88613d0ec6e9f2e3be00f"},{"kind":"paint","autostore":true,"pl":"0.6","day":"20261015","file":"BlockTopple-playable-paint-autostore-pl0.6-20261015.html","kb":1449,"md5":"7720ddbac1706b47daf63475f0f4a440"},{"kind":"glass","autostore":false,"pl":"0.6","day":"20261015","file":"BlockTopple-playable-glass-pl0.6-20261015.html","kb":1449,"md5":"d0dfd2e0ea7992f2e7c3fa19dff5dcec"},{"kind":"glass","autostore":true,"pl":"0.6","day":"20261015","file":"BlockTopple-playable-glass-autostore-pl0.6-20261015.html","kb":1449,"md5":"35fbda61a18d10bea2658476aec9c64a"}];      // null = read BASE + manifest.json (this build's files); tools/goi-playable.js writes the list in
   var PHONE_W = 390, PHONE_H = 844;   // the phone the desktop viewport copies (CSS px; most phones today)
   var list = [], cur = null, fromMenu = false;
   var $ = function (id) { return document.getElementById(id); };
@@ -146,12 +155,14 @@
   function load(it) {   // a NEW iframe each time: nothing of the last run (sound, timers) survives
     var st = $('stage');
     st.textContent = '';
-    var fr = document.createElement('iframe');
+    var sc = document.createElement('div'), fr = document.createElement('iframe');
+    sc.className = 'scr';   // the loading backdrop behind the playable (css #stage .scr)
     fr.setAttribute('allow', 'autoplay');
     fr.title = INFO[it.kind].name;
     fr.src = BASE + encodeURIComponent(it.file) + (local ? '?t=' + Date.now() : '');
     fr.onload = function () { try { fr.contentWindow.focus(); } catch (e) { /* keys only */ } };
-    st.appendChild(fr);
+    sc.appendChild(fr);
+    st.appendChild(sc);
     layout();
   }
   function render() {
@@ -182,13 +193,13 @@
     var full = window.matchMedia('(pointer: coarse)').matches || innerWidth <= 600;
     root.classList.toggle('full', full);
     root.classList.toggle('frame', !full);
-    var fr = $('stage').querySelector('iframe');
-    if (!fr) return;
-    if (full) { fr.style.width = fr.style.height = ''; return; }
+    var sc = $('stage').querySelector('.scr');
+    if (!sc) return;
+    if (full) { sc.style.width = sc.style.height = ''; return; }
     var h = Math.min(PHONE_H, innerHeight - 56 - 44), w = Math.round(h * PHONE_W / PHONE_H);
     if (w > innerWidth - 40) { w = innerWidth - 40; h = Math.round(w * PHONE_H / PHONE_W); }
-    fr.style.width = w + 'px';
-    fr.style.height = h + 'px';
+    sc.style.width = w + 'px';
+    sc.style.height = h + 'px';
   }
   addEventListener('resize', layout);
   addEventListener('popstate', render);
