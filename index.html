@@ -100,8 +100,8 @@
     paint: { name: 'PLY 1 · Lật khối tô màu', icon: 'featBrush', short: 'Lăn khối tô kín sàn, rồi tô kín sàn 6×6 trước khi hết giờ.', what: 'Hook 1 — màn 1 của game: sàn chữ L 6×4, 9 ô, khối ngắn, tay chỉ 2 nước, không đồng hồ. → Hook 2 — màn 11: sàn 6×6, khối dài, đồng hồ 17 giây; đo 7 kiểu người chơi: 93–100% hết giờ khi còn 1–3 ô, thắng 0–6%.' },
     glass: { name: 'PLY 2 · Lật khối phá kính', icon: 'featBang', short: 'Lăn khối phá hết kính, rồi phá hết kính sàn 5×6 trước khi hết giờ.', what: 'Hook 1 — màn 1 của game: sàn chữ L 6×4, 9 ô kính, khối ngắn, tay chỉ 2 nước, không đồng hồ. → Hook 2 — màn 8: sàn 5×6, khối dài, đồng hồ 17 giây; đo 7 kiểu người chơi: 89–100% hết giờ khi còn 1–3 ô, thắng 0–3%.' }
   };
-  var BASE = "pl0.8-20261015/";   // where the playable files are (tools/goi-playable.js sets it for the shared copies)
-  var LIST = [{"kind":"paint","autostore":false,"pl":"0.8","day":"20261015","file":"BlockTopple-playable-paint-pl0.8-20261015.html","kb":1463,"md5":"31f5f636c8763e330db534bcf0c6e8eb"},{"kind":"paint","autostore":true,"pl":"0.8","day":"20261015","file":"BlockTopple-playable-paint-autostore-pl0.8-20261015.html","kb":1463,"md5":"bcfd205e1ceb2566b7b4d4816b06e2cf"},{"kind":"glass","autostore":false,"pl":"0.8","day":"20261015","file":"BlockTopple-playable-glass-pl0.8-20261015.html","kb":1463,"md5":"f94f81def8bf8addc9936e0909f9d955"},{"kind":"glass","autostore":true,"pl":"0.8","day":"20261015","file":"BlockTopple-playable-glass-autostore-pl0.8-20261015.html","kb":1463,"md5":"45e73157a8c45482790ece7172d3fbd2"}];      // null = read BASE + manifest.json (this build's files); tools/goi-playable.js writes the list in
+  var BASE = "pl0.9-20261015/";   // where the playable files are (tools/goi-playable.js sets it for the shared copies)
+  var LIST = [{"kind":"paint","autostore":false,"pl":"0.9","day":"20261015","file":"BlockTopple-playable-paint-pl0.9-20261015.html","kb":1543,"md5":"5f3c9a3357fc4d47bcb272c6098c75b0"},{"kind":"paint","autostore":true,"pl":"0.9","day":"20261015","file":"BlockTopple-playable-paint-autostore-pl0.9-20261015.html","kb":1543,"md5":"1f508c7c1b04341d704487fbb62949e6"},{"kind":"glass","autostore":false,"pl":"0.9","day":"20261015","file":"BlockTopple-playable-glass-pl0.9-20261015.html","kb":1543,"md5":"035b7f3b41bf4f6f69824d34cfd5ffa5"},{"kind":"glass","autostore":true,"pl":"0.9","day":"20261015","file":"BlockTopple-playable-glass-autostore-pl0.9-20261015.html","kb":1543,"md5":"7f5d7ecc79932f9da00eacbe061eb792"}];      // null = read BASE + manifest.json (this build's files); tools/goi-playable.js writes the list in
   var PHONE_W = 390, PHONE_H = 844;   // the phone the desktop viewport copies (CSS px; most phones today)
   var list = [], cur = null, fromMenu = false;
   var $ = function (id) { return document.getElementById(id); };
@@ -226,6 +226,11 @@
     cards();
     layout();
     render();   // a link with #ice / #key / #brush (+ -autostore) opens that playable straight away
+    // the playables download while the menu is up, as an ad network has its ad before showing it (người dùng 15/10/2026: the
+    // first open is the one that counts, and it waited for the file). Same URL as the iframe, so it opens from the cache. Not
+    // on the dev server (each open asks a fresh copy, ?t=) nor from a disk (no fetch there).
+    if (!local && /^https?:$/.test(location.protocol)) list.filter(function (x) { return INFO[x.kind] && !x.autostore; })
+      .forEach(function (x) { fetch(BASE + encodeURIComponent(x.file)).catch(function () { /* the iframe asks again */ }); });
   }).catch(function () {
     $('cards').textContent = 'Chưa có playable/dist/manifest.json — chạy: node tools/build-playable.js';
   });
